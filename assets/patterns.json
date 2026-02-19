@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "name": "Simple Flower",
+        "difficulty": 1,
+        "description": "A basic 4-petaled flower, often drawn by beginners in Southern India.",
+        "region": "Tamil Nadu"
+    },
+    {
+        "id": 2,
+        "name": "Dotted Square",
+        "difficulty": 1,
+        "description": "Grid-based designs (Kolam) start with a pattern of dots.",
+        "region": "South India"
+    },
+    {
+        "id": 3,
+        "name": "Six-Point Star",
+        "difficulty": 2,
+        "description": "Geometric harmony representing the balance of elements.",
+        "region": "Maharashtra"
+    },
+    {
+        "id": 16,
+        "name": "Lotus Mandala",
+        "difficulty": 3,
+        "description": "The Lotus (Padma) symbolizes purity and spiritual awakening.",
+        "region": "Pan-India"
+    },
+    {
+        "id": 36,
+        "name": "Peacock Bloom",
+        "difficulty": 5,
+        "description": "Intricate peacock feather motifs (Mayura) for prosperity.",
+        "region": "Rajasthan"
+    }
+]
