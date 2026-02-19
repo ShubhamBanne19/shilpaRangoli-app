@@ -36,6 +36,3 @@ npx angular-cli-ghpages --dir=dist/my-rangoli-app
 - **Sliders**: Adjust symmetry, speed, gravity, and size.
 - **Palette**: Switch between Neon, Pastel, Fire, and Ice themes.
 
-## Credits
-Created by **Antigravity**.
-Font: Cinzel Decorative (Google Fonts).
