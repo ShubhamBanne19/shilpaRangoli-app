@@ -1,26 +1,91 @@
-<div class="learning-container">
+<div class="learning-root">
 
-  <!-- GALLERY STATE -->
+  <!-- ═══════════════════════════════════════════════════════════
+       ONBOARDING GATE — shown on first visit
+  ════════════════════════════════════════════════════════════ -->
+  <app-onboarding *ngIf="!onboarding.isOnboardingComplete()"></app-onboarding>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INFO POPOVER
+  ════════════════════════════════════════════════════════════ -->
+  <div class="popover-backdrop" *ngIf="showInfoPopover()" (click)="closeInfoPopover()">
+    <div class="popover-card" (click)="$event.stopPropagation()" *ngIf="stageGuide() as guide">
+      <button class="popover-close" (click)="closeInfoPopover()" aria-label="Close">✕</button>
+
+      <div class="popover-header">
+        <span class="popover-stage-label">Stage {{ guide.stage }}</span>
+        <h2>{{ guide.technique }}</h2>
+      </div>
+
+      <div class="popover-items">
+        <div class="popover-item" *ngFor="let item of guide.guideItems">
+          <span class="item-icon">{{ item.icon }}</span>
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="popover-citation">
+        <span class="citation-icon">📚</span>
+        <div>
+          <strong>{{ guide.culturalContext.tradition }}</strong>
+          <p>{{ guide.culturalContext.citation }}</p>
+        </div>
+      </div>
+
+      <div class="popover-pass">
+        <span>🎯 Pass condition:</span> {{ guide.passThreshold }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       GALLERY STATE
+  ════════════════════════════════════════════════════════════ -->
   <div class="gallery-view" *ngIf="gameState === 'GALLERY'">
-    <header>
-      <button class="back-btn" routerLink="/game-mode">← Modes</button>
-      <h1>Pattern Library</h1>
+
+    <!-- Top bar -->
+    <header class="gallery-header">
+      <a class="back-btn" routerLink="/game-mode">← Modes</a>
+      <h1>Guru Protocol</h1>
+      <div class="guru-badge" [style.color]="guruScoreColor()">
+        <span class="guru-score">{{ guruScore() }}</span>
+        <span class="guru-label">Guru Score</span>
+      </div>
     </header>
 
-    <div class="tier-selector">
-      <button (click)="galleryTier = 'Beginner'" [class.active]="galleryTier === 'Beginner'">Beginner</button>
-      <button (click)="galleryTier = 'Intermediate'" [class.active]="galleryTier === 'Intermediate'">Intermediate</button>
-      <button (click)="galleryTier = 'Advanced'" [class.active]="galleryTier === 'Advanced'">Advanced</button>
+    <!-- Stage progress stepper -->
+    <div class="stage-stepper">
+      <div *ngFor="let s of [1,2,3,4,5]"
+           class="stage-node"
+           [class.unlocked]="stageIsUnlocked(s)"
+           [class.active]="currentStage() === s">
+        <div class="node-circle">
+          <span *ngIf="stageIsUnlocked(s)">{{ s }}</span>
+          <span *ngIf="!stageIsUnlocked(s)">🔒</span>
+        </div>
+        <span class="node-label">{{ stageGuides[s-1].stageName }}</span>
+      </div>
     </div>
 
+    <!-- Tier selector -->
+    <div class="tier-selector">
+      <button (click)="galleryTier = 'Beginner'"     [class.active]="galleryTier === 'Beginner'"    >Beginner</button>
+      <button (click)="galleryTier = 'Intermediate'" [class.active]="galleryTier === 'Intermediate'" >Intermediate</button>
+      <button (click)="galleryTier = 'Advanced'"     [class.active]="galleryTier === 'Advanced'"    >Advanced</button>
+    </div>
+
+    <!-- Pattern grid -->
     <div class="pattern-grid">
-      <div *ngFor="let p of filteredPatterns" 
-           class="pattern-card" 
+      <div *ngFor="let p of filteredPatterns"
+           class="pattern-card"
            [class.locked]="!isUnlocked(p.id)"
            (click)="selectPattern(p)">
         <div class="pattern-thumb">
-          <!-- TODO: Render thumbnail using p5 in subcomponent or static image -->
-          <div class="placeholder-art" [style.background]="'hsl(' + (p.id*20) + ', 70%, 80%)'"></div>
+          <div class="placeholder-art" [style.background]="'hsl(' + (p.id*20) + ', 55%, 25%)'"></div>
+          <div class="pattern-shine"></div>
           <span class="lock-icon" *ngIf="!isUnlocked(p.id)">🔒</span>
         </div>
         <div class="pattern-info">
@@ -28,74 +93,160 @@
           <div class="stars">
             <span *ngFor="let s of [1,2,3,4,5]" [class.filled]="s <= p.difficulty">★</span>
           </div>
+          <span class="symmetry-tag">{{ p.symmetryAxes }}-fold</span>
         </div>
       </div>
     </div>
+
   </div>
 
-  <!-- PREVIEW MODAL -->
-  <div class="preview-modal" *ngIf="gameState === 'PREVIEW' && currentPattern">
-    <div class="modal-content glass">
+  <!-- ═══════════════════════════════════════════════════════════
+       PREVIEW MODAL
+  ════════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" *ngIf="gameState === 'PREVIEW' && currentPattern">
+    <div class="modal-card">
       <h2>{{ currentPattern.name }}</h2>
       <p class="cultural-note">{{ currentPattern.culturalNote }}</p>
-      
-      <div class="stats">
-        <span>Symmetry: {{ currentPattern.symmetryAxes }}-fold</span>
-        <span>Difficulty: {{ currentPattern.difficulty }}/5</span>
+
+      <div class="preview-stats">
+        <div class="stat"><span class="stat-val">{{ currentPattern.symmetryAxes }}</span><span class="stat-key">-fold symmetry</span></div>
+        <div class="stat"><span class="stat-val">{{ currentPattern.difficulty }}</span><span class="stat-key">/5 difficulty</span></div>
+        <div class="stat"><span class="stat-val">{{ stageLabel() }}</span><span class="stat-key">stage</span></div>
       </div>
 
-      <div class="actions">
-        <button (click)="startLevel()" class="primary-btn">Start Drawing</button>
-        <button (click)="gameState = 'GALLERY'" class="secondary-btn">Back</button>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="startLevel()">Begin Drawing</button>
+        <button class="btn-ghost"   (click)="gameState = 'GALLERY'">Back</button>
       </div>
     </div>
   </div>
 
-  <!-- PLAYING STATE -->
+  <!-- ═══════════════════════════════════════════════════════════
+       PLAYING STATE
+  ════════════════════════════════════════════════════════════ -->
   <div class="playing-view" *ngIf="gameState === 'PLAYING'">
-    <div class="game-header">
-      <button (click)="backToGallery()" class="text-btn">Quit</button>
-      
-      <div class="toolbar">
-        <label class="toggle" title="Show Tracing Overlay">
+
+    <!-- Top HUD -->
+    <div class="hud">
+      <button class="hud-quit"    (click)="backToGallery()">✕ Quit</button>
+
+      <div class="hud-stage">
+        <span class="stage-pill">Stage {{ currentStage() }} · {{ stageLabel() }}</span>
+        <button class="info-btn" (click)="openInfoPopover()" title="Stage guide">ℹ</button>
+      </div>
+
+      <div class="hud-metrics">
+        <div class="mini-metric">
+          <span class="mm-label">Grip</span>
+          <div class="mm-bar"><div class="mm-fill grip" [style.width.%]="metricPct(liveMetrics().pressureConsistency)"></div></div>
+        </div>
+        <div class="mini-metric">
+          <span class="mm-label">Flow</span>
+          <div class="mm-bar"><div class="mm-fill flow" [style.width.%]="metricPct(liveMetrics().velocityConsistency)"></div></div>
+        </div>
+        <div class="mini-metric">
+          <span class="mm-label">Angle</span>
+          <div class="mm-bar"><div class="mm-fill angle" [style.width.%]="metricPct(liveMetrics().angularPrecision)"></div></div>
+        </div>
+      </div>
+
+      <div class="accuracy-chip">
+        <span>{{ accuracy }}%</span>
+        <div class="acc-bar"><div class="acc-fill" [style.width.%]="accuracy"></div></div>
+      </div>
+
+      <div class="hud-tools">
+        <label class="toggle-pill">
           <input type="checkbox" [(ngModel)]="showGhostOverlay">
-          <span>👻 Ghost</span>
+          <span>👻</span>
         </label>
-        <label class="toggle" title="Show Symmetry Guides">
+        <label class="toggle-pill">
           <input type="checkbox" [(ngModel)]="showGuides">
-          <span>📏 Guides</span>
+          <span>📏</span>
         </label>
       </div>
 
-      <div class="accuracy-meter">
-        <span>Accuracy: <strong>{{ accuracy }}%</strong></span>
-        <div class="bar"><div class="fill" [style.width.%]="accuracy"></div></div>
-      </div>
-      <button (click)="finishLevel()" class="finish-btn">Finish</button>
+      <button class="btn-finish" (click)="finishLevel()">Finish ✓</button>
     </div>
 
+    <!-- Dual canvas split -->
     <div class="canvas-split">
-      <div class="target-side" #targetCanvas>
-        <span class="label">Target</span>
+      <div class="canvas-panel target-panel">
+        <div class="panel-label">Target</div>
+        <div class="canvas-host" #targetCanvas></div>
       </div>
-      <div class="player-side" #playerCanvas>
-        <span class="label">Your Canvas</span>
+      <div class="canvas-panel player-panel">
+        <div class="panel-label">Your Drawing</div>
+        <div class="canvas-host" #playerCanvas></div>
       </div>
     </div>
+
   </div>
 
-  <!-- RESULTS STATE -->
-  <div class="results-modal" *ngIf="gameState === 'RESULTS'">
-    <div class="modal-content glass">
-      <h1>Level Complete!</h1>
-      <div class="final-score">{{ accuracy }}%</div>
-      <div class="stars-earned">
-         <!-- Logic for stars display -->
-         ★★★★☆
+  <!-- ═══════════════════════════════════════════════════════════
+       RESULTS STATE
+  ════════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop results-backdrop" *ngIf="gameState === 'RESULTS'">
+    <div class="modal-card results-card" [class.passed]="sessionPassed">
+
+      <div class="results-header">
+        <span class="result-emoji">{{ sessionPassed ? '🎉' : '💪' }}</span>
+        <h1>{{ sessionPassed ? 'Level Mastered!' : 'Keep Practicing' }}</h1>
+        <div class="visual-score">{{ accuracy }}<sup>%</sup></div>
       </div>
-      <div class="actions">
-        <button (click)="backToGallery()" class="primary-btn">Continue</button>
+
+      <!-- Skill breakdown -->
+      <div class="skill-breakdown">
+        <h3>Skill Metrics</h3>
+        <div class="skill-row">
+          <span>Grip Steady</span>
+          <div class="sk-bar"><div class="sk-fill" [style.width.%]="metricPct(liveMetrics().pressureConsistency)"></div></div>
+          <span class="sk-val">{{ metricPct(liveMetrics().pressureConsistency) }}%</span>
+        </div>
+        <div class="skill-row">
+          <span>Flow</span>
+          <div class="sk-bar"><div class="sk-fill" [style.width.%]="metricPct(liveMetrics().velocityConsistency)"></div></div>
+          <span class="sk-val">{{ metricPct(liveMetrics().velocityConsistency) }}%</span>
+        </div>
+        <div class="skill-row">
+          <span>Angle</span>
+          <div class="sk-bar"><div class="sk-fill" [style.width.%]="metricPct(liveMetrics().angularPrecision)"></div></div>
+          <span class="sk-val">{{ metricPct(liveMetrics().angularPrecision) }}%</span>
+        </div>
+        <div class="skill-row">
+          <span>Flow State</span>
+          <div class="sk-bar"><div class="sk-fill flow" [style.width.%]="metricPct(liveMetrics().flowStateIndex)"></div></div>
+          <span class="sk-val">{{ metricPct(liveMetrics().flowStateIndex) }}%</span>
+        </div>
       </div>
+
+      <!-- Feedback -->
+      <div class="feedback-list">
+        <p *ngFor="let f of sessionFeedback" class="feedback-msg">{{ f }}</p>
+      </div>
+
+      <!-- New Achievements -->
+      <div class="achievements" *ngIf="newAchievements.length > 0">
+        <div class="ach-item" *ngFor="let a of newAchievements">
+          <span class="ach-icon">{{ a.icon }}</span>
+          <div>
+            <strong>{{ a.name }}</strong>
+            <p>{{ a.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guru Score delta -->
+      <div class="guru-score-display">
+        <span class="gsd-label">Guru Score</span>
+        <span class="gsd-val" [style.color]="guruScoreColor()">{{ finalGuruScore }}</span>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="startLevel()" *ngIf="!sessionPassed">Try Again</button>
+        <button class="btn-ghost"   (click)="backToGallery()">Back to Gallery</button>
+      </div>
+
     </div>
   </div>
 

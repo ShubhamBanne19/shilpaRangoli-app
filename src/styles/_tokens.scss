@@ -1,0 +1,191 @@
+// =======================================================================
+// GURU PROTOCOL — GLOBAL DESIGN TOKENS
+// "Zen-Professional" design system for ShilpaRangoli
+// =======================================================================
+
+// ========== TYPOGRAPHY SCALE (Major Third: 1.250 ratio) ==========
+$font-scale-micro: 0.64rem; //  ~10px — Metadata, timestamps
+$font-scale-caption: 0.80rem; //  ~13px — Help text, tooltips
+$font-scale-body: 1.00rem; //  ~16px — Primary instruction text
+$font-scale-subhead: 1.25rem; //  ~20px — Section headers
+$font-scale-title: 1.563rem; //  ~25px — Pattern names
+$font-scale-display: 1.953rem; //  ~31px — Stage announcements
+$font-scale-hero: 2.441rem; //  ~39px — App branding
+
+// Font Families
+$font-display: 'Crimson Pro', Georgia, serif;
+$font-body: 'Inter', system-ui, -apple-system, sans-serif;
+$font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+// Line Heights
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+$line-height-loose: 1.8;
+
+// ========== COLOR SYSTEM (HSL for programmatic manipulation) ==========
+// Semantic Palette — traditional Rangoli pigments
+$color-primary: hsl(340, 95%, 65%); // Kumkum red
+$color-secondary: hsl(45, 100%, 55%); // Turmeric gold
+$color-accent: hsl(280, 70%, 60%); // Indigo dye
+$color-success: hsl(145, 65%, 50%); // Mehndi green
+$color-warning: hsl(30, 95%, 55%); // Saffron orange
+$color-error: hsl(10, 85%, 55%); // Chili red
+
+// Neutral Grays (warm-tinted)
+$color-bg-dark: hsl(240, 15%, 8%); // Canvas void
+$color-bg-medium: hsl(240, 10%, 15%); // Panel backgrounds
+$color-bg-light: hsl(240, 8%, 95%); // Light mode (optional)
+$color-text-primary: hsl(240, 5%, 95%); // High contrast text
+$color-text-secondary: hsl(240, 5%, 70%); // Deemphasized text
+$color-text-tertiary: hsl(240, 5%, 50%); // Metadata
+
+// Functional Overlays
+$color-overlay-dark: hsla(240, 20%, 5%, 0.85);
+$color-overlay-light: hsla(240, 5%, 98%, 0.90);
+$color-glow: hsla(340, 95%, 65%, 0.40);
+
+// ========== SPACING SYSTEM (8px base grid) ==========
+$sp-xs: 0.5rem; //  8px
+$sp-sm: 1.0rem; // 16px
+$sp-md: 1.5rem; // 24px
+$sp-lg: 2.0rem; // 32px
+$sp-xl: 3.0rem; // 48px
+$sp-2xl: 4.0rem; // 64px
+
+// ========== Z-INDEX LAYERS ==========
+$z-canvas: 1;
+$z-guides: 2;
+$z-controls: 10;
+$z-feedback: 20;
+$z-modal: 100;
+$z-toast: 200;
+$z-debug: 999;
+
+// ========== ANIMATION TOKENS ==========
+$t-fast: 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+$t-base: 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+$t-slow: 600ms cubic-bezier(0.0, 0.0, 0.2, 1);
+$t-bounce: 500ms cubic-bezier(0.68, -0.55, 0.27, 1.55);
+$t-flow: 2000ms cubic-bezier(0.22, 0.61, 0.36, 1);
+
+// ========== ELEVATION MIXIN ==========
+@mixin elevation($level) {
+    @if $level ==1 {
+        box-shadow: 0 2px 4px hsla(240, 20%, 5%, 0.10);
+    }
+
+    @else if $level ==2 {
+        box-shadow: 0 4px 8px hsla(240, 20%, 5%, 0.15);
+    }
+
+    @else if $level ==3 {
+        box-shadow: 0 8px 16px hsla(240, 20%, 5%, 0.20);
+    }
+
+    @else if $level ==4 {
+        box-shadow: 0 16px 32px hsla(240, 20%, 5%, 0.25);
+    }
+}
+
+// ========== ANIMATION KEYFRAMES (shared) ==========
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        filter: brightness(1);
+    }
+
+    50% {
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes slide-in-top {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-bottom {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes success-flash {
+    0% {
+        background: $color-bg-dark;
+    }
+
+    50% {
+        background: hsla(145, 65%, 50%, 0.2);
+    }
+
+    100% {
+        background: $color-bg-dark;
+    }
+}
+
+@keyframes error-shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
