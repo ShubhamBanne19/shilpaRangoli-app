@@ -1,0 +1,71 @@
+<div class="onboarding-overlay">
+  <div class="onboarding-card" role="dialog" aria-labelledby="ob-title">
+
+    <!-- Step Progress -->
+    <div class="step-track">
+      <div class="step-dots">
+        <span *ngFor="let s of steps; let i = index"
+              class="dot"
+              [class.active]="i === stepIndex"
+              [class.done]="i < stepIndex"></span>
+      </div>
+      <span class="step-label">{{ stageLabel() }}</span>
+    </div>
+
+    <!-- Header -->
+    <h2 id="ob-title" class="step-title">{{ currentStep.title }}</h2>
+    <p class="step-description">{{ currentStep.description }}</p>
+
+    <!-- Demo Canvas area -->
+    <div class="demo-area">
+      <div class="canvas-host" #demoCanvas></div>
+      <div class="canvas-label">
+        <span class="dot-blink"></span>
+        {{ currentStep.demoAnimation.label }}
+      </div>
+    </div>
+
+    <!-- Live Metric Meters -->
+    <div class="metric-bars">
+      <div class="metric-bar" [class.highlighted]="currentStep.validation.metric === 'pressureConsistency'">
+        <span class="metric-name">Grip Steadiness</span>
+        <div class="bar-track">
+          <div class="bar-fill pressure" [style.width.%]="pressureScore()"></div>
+        </div>
+        <span class="metric-val">{{ pressureScore() }}%</span>
+      </div>
+      <div class="metric-bar" [class.highlighted]="currentStep.validation.metric === 'velocityConsistency'">
+        <span class="metric-name">Flow Smoothness</span>
+        <div class="bar-track">
+          <div class="bar-fill velocity" [style.width.%]="velocityScore()"></div>
+        </div>
+        <span class="metric-val">{{ velocityScore() }}%</span>
+      </div>
+    </div>
+
+    <!-- Hint -->
+    <div class="hint-box" *ngIf="lastHint">
+      <span class="hint-icon">💡</span>
+      <p>{{ lastHint }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="skip-btn" (click)="skip()">Skip Tutorial</button>
+      <button class="next-btn"
+              [disabled]="!canAdvance()"
+              (click)="advance()">
+        {{ stepIndex < steps.length - 1 ? 'Next →' : 'Begin Practice ✨' }}
+      </button>
+    </div>
+
+    <p class="attempt-note" *ngIf="!canAdvance() && attemptsOnStep > 0">
+      Draw on the canvas above to unlock this step
+      ({{ attemptsOnStep }}/{{ currentStep.minAttempts }} attempts)
+    </p>
+    <p class="attempt-note" *ngIf="!canAdvance() && attemptsOnStep === 0">
+      Double-tap to clear · Draw on the canvas to practice
+    </p>
+
+  </div>
+</div>
