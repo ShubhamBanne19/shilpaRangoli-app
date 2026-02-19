@@ -1,15 +1,17 @@
-<div class="selector-container">
+<div class="selector-container safe-y">
   <header>
-    <h1>Astral Rangoli</h1>
-    <p>Choose your journey</p>
+    <div class="brand-logo">🪷</div>
+    <h1>ShilpaRangoli</h1>
+    <p class="subtitle">Choose your journey</p>
   </header>
 
   <div class="cards-wrapper">
-    <a *ngFor="let mode of modes" 
-       [routerLink]="mode.route" 
-       class="mode-card"
-       [style.--card-accent]="mode.color">
-      
+    <a *ngFor="let mode of modes"
+       [routerLink]="mode.route"
+       class="mode-card tap-feedback btn-ripple"
+       [style.--card-accent]="mode.color"
+       [attr.aria-label]="'Start ' + mode.title">
+
       <div class="card-icon">{{ mode.icon }}</div>
       <div class="card-content">
         <h2>{{ mode.title }}</h2>
@@ -17,16 +19,21 @@
       </div>
       <div class="card-action">
         <span>Start</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M5 12h14M12 5l7 7-7 7" />
         </svg>
       </div>
-      
+
       <div class="card-bg-glow"></div>
     </a>
   </div>
 
-  <footer>
-    <p>Created by Antigravity</p>
+  <footer class="safe-bottom">
+    <a href="https://www.youtube.com/@shilpasrangoli" target="_blank" rel="noopener" class="yt-link tap-target btn-ripple" aria-label="Shilpa's Rangoli YouTube Channel">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+      <span>Shilpa's Rangoli</span>
+    </a>
   </footer>
 </div>

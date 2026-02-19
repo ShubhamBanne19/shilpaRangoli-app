@@ -1,0 +1,112 @@
+// ═══════════════════════════════════════════════════════
+//  Typography System — Fluid Type Scale
+//  Base: 320px (mobile) → 768px (tablet) → 1440px (desktop)
+// ═══════════════════════════════════════════════════════
+
+:root {
+    // ── Font Stacks ────────────────────────────────────
+    --font-display: 'Crimson Pro', Georgia, serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    // ── Fluid Type Scale (clamp-based, no breakpoints) ─
+    // Formula: clamp(min, preferred, max)
+    // preferred = min + (max - min) * ((100vw - 320px) / (768px - 320px))
+
+    --type-display: clamp(2rem, 1.5rem + 2.5vw, 3.5rem); // 32px → 56px
+    --type-h1: clamp(1.75rem, 1.4rem + 1.8vw, 2.75rem); // 28px → 44px
+    --type-h2: clamp(1.35rem, 1.15rem + 1vw, 2rem); // 21.6px → 32px
+    --type-h3: clamp(1.125rem, 1rem + 0.6vw, 1.5rem); // 18px → 24px
+    --type-body: clamp(0.875rem, 0.82rem + 0.3vw, 1.0625rem); // 14px → 17px
+    --type-small: clamp(0.75rem, 0.72rem + 0.15vw, 0.875rem); // 12px → 14px
+    --type-label: clamp(0.625rem, 0.6rem + 0.12vw, 0.75rem); // 10px → 12px
+
+    // ── Line Heights ───────────────────────────────────
+    --lh-tight: 1.2;
+    --lh-normal: 1.5;
+    --lh-relaxed: 1.7;
+
+    // ── Letter Spacing ─────────────────────────────────
+    --ls-tight: -0.02em;
+    --ls-normal: 0;
+    --ls-wide: 0.05em;
+    --ls-wider: 0.1em;
+
+    // ── Font Weight ────────────────────────────────────
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-semi: 600;
+    --fw-bold: 700;
+}
+
+// ── Text Rendering ─────────────────────────────────────
+body {
+    font-family: var(--font-body);
+    font-size: var(--type-body);
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-size-adjust: none;
+}
+
+// ── Heading Defaults ───────────────────────────────────
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-tight);
+    font-weight: var(--fw-bold);
+}
+
+h1 {
+    font-size: var(--type-h1);
+}
+
+h2 {
+    font-size: var(--type-h2);
+}
+
+h3 {
+    font-size: var(--type-h3);
+}
+
+// ── Utility Classes ────────────────────────────────────
+.text-display {
+    font-size: var(--type-display);
+    font-family: var(--font-display);
+}
+
+.text-h1 {
+    font-size: var(--type-h1);
+}
+
+.text-h2 {
+    font-size: var(--type-h2);
+}
+
+.text-h3 {
+    font-size: var(--type-h3);
+}
+
+.text-body {
+    font-size: var(--type-body);
+}
+
+.text-small {
+    font-size: var(--type-small);
+}
+
+.text-label {
+    font-size: var(--type-label);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wider);
+}
+
+.text-mono {
+    font-family: var(--font-mono);
+}
