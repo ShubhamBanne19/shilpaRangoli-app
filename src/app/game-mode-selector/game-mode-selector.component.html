@@ -1,0 +1,32 @@
+<div class="selector-container">
+  <header>
+    <h1>Astral Rangoli</h1>
+    <p>Choose your journey</p>
+  </header>
+
+  <div class="cards-wrapper">
+    <a *ngFor="let mode of modes" 
+       [routerLink]="mode.route" 
+       class="mode-card"
+       [style.--card-accent]="mode.color">
+      
+      <div class="card-icon">{{ mode.icon }}</div>
+      <div class="card-content">
+        <h2>{{ mode.title }}</h2>
+        <p>{{ mode.description }}</p>
+      </div>
+      <div class="card-action">
+        <span>Start</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </div>
+      
+      <div class="card-bg-glow"></div>
+    </a>
+  </div>
+
+  <footer>
+    <p>Created by Antigravity</p>
+  </footer>
+</div>

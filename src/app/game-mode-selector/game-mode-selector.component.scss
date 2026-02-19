@@ -1,0 +1,205 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a14 100%);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    --accent-learning: #FF6B9D;
+    --accent-freeplay: #00ffff;
+}
+
+.selector-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0id2hpdGUiLz48L3N2Zz4=');
+        mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+        animation: rotate 120s linear infinite;
+        z-index: -1;
+    }
+}
+
+header {
+    text-align: center;
+    margin-bottom: 4rem;
+    animation: fadeInDown 1s ease-out;
+
+    h1 {
+        font-family: 'Cinzel Decorative', cursive;
+        font-size: 4rem;
+        margin: 0;
+        background: linear-gradient(to right, #FFD700, #FFA500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 0.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+}
+
+.cards-wrapper {
+    display: flex;
+    gap: 2rem;
+    perspective: 1000px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+.mode-card {
+    position: relative;
+    width: 320px;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    animation: fadeInUp 1s ease-out backwards;
+
+    &:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+
+    &:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    &:hover {
+        transform: translateY(-10px) scale(1.02);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--card-accent);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+            0 0 30px var(--card-accent);
+
+        .card-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .card-action {
+            color: var(--card-accent);
+            transform: translateX(5px);
+        }
+    }
+
+    .card-bg-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, var(--card-accent) 0%, transparent 60%);
+        opacity: 0;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.4s;
+        pointer-events: none;
+        z-index: -1;
+        filter: blur(50px);
+    }
+
+    &:hover .card-bg-glow {
+        opacity: 0.15;
+    }
+
+    .card-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.4s;
+    }
+
+    h2 {
+        font-family: 'Baloo Bhai 2', sans-serif;
+        font-size: 1.8rem;
+        margin: 0 0 0.5rem 0;
+    }
+
+    p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0 0 2rem 0;
+    }
+
+    .card-action {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        transition: transform 0.3s, color 0.3s;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+footer {
+    position: absolute;
+    bottom: 2rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

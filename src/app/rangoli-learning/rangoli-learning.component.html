@@ -1,0 +1,102 @@
+<div class="learning-container">
+
+  <!-- GALLERY STATE -->
+  <div class="gallery-view" *ngIf="gameState === 'GALLERY'">
+    <header>
+      <button class="back-btn" routerLink="/game-mode">← Modes</button>
+      <h1>Pattern Library</h1>
+    </header>
+
+    <div class="tier-selector">
+      <button (click)="galleryTier = 'Beginner'" [class.active]="galleryTier === 'Beginner'">Beginner</button>
+      <button (click)="galleryTier = 'Intermediate'" [class.active]="galleryTier === 'Intermediate'">Intermediate</button>
+      <button (click)="galleryTier = 'Advanced'" [class.active]="galleryTier === 'Advanced'">Advanced</button>
+    </div>
+
+    <div class="pattern-grid">
+      <div *ngFor="let p of filteredPatterns" 
+           class="pattern-card" 
+           [class.locked]="!isUnlocked(p.id)"
+           (click)="selectPattern(p)">
+        <div class="pattern-thumb">
+          <!-- TODO: Render thumbnail using p5 in subcomponent or static image -->
+          <div class="placeholder-art" [style.background]="'hsl(' + (p.id*20) + ', 70%, 80%)'"></div>
+          <span class="lock-icon" *ngIf="!isUnlocked(p.id)">🔒</span>
+        </div>
+        <div class="pattern-info">
+          <h3>{{ p.name }}</h3>
+          <div class="stars">
+            <span *ngFor="let s of [1,2,3,4,5]" [class.filled]="s <= p.difficulty">★</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div class="preview-modal" *ngIf="gameState === 'PREVIEW' && currentPattern">
+    <div class="modal-content glass">
+      <h2>{{ currentPattern.name }}</h2>
+      <p class="cultural-note">{{ currentPattern.culturalNote }}</p>
+      
+      <div class="stats">
+        <span>Symmetry: {{ currentPattern.symmetryAxes }}-fold</span>
+        <span>Difficulty: {{ currentPattern.difficulty }}/5</span>
+      </div>
+
+      <div class="actions">
+        <button (click)="startLevel()" class="primary-btn">Start Drawing</button>
+        <button (click)="gameState = 'GALLERY'" class="secondary-btn">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYING STATE -->
+  <div class="playing-view" *ngIf="gameState === 'PLAYING'">
+    <div class="game-header">
+      <button (click)="backToGallery()" class="text-btn">Quit</button>
+      
+      <div class="toolbar">
+        <label class="toggle" title="Show Tracing Overlay">
+          <input type="checkbox" [(ngModel)]="showGhostOverlay">
+          <span>👻 Ghost</span>
+        </label>
+        <label class="toggle" title="Show Symmetry Guides">
+          <input type="checkbox" [(ngModel)]="showGuides">
+          <span>📏 Guides</span>
+        </label>
+      </div>
+
+      <div class="accuracy-meter">
+        <span>Accuracy: <strong>{{ accuracy }}%</strong></span>
+        <div class="bar"><div class="fill" [style.width.%]="accuracy"></div></div>
+      </div>
+      <button (click)="finishLevel()" class="finish-btn">Finish</button>
+    </div>
+
+    <div class="canvas-split">
+      <div class="target-side" #targetCanvas>
+        <span class="label">Target</span>
+      </div>
+      <div class="player-side" #playerCanvas>
+        <span class="label">Your Canvas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS STATE -->
+  <div class="results-modal" *ngIf="gameState === 'RESULTS'">
+    <div class="modal-content glass">
+      <h1>Level Complete!</h1>
+      <div class="final-score">{{ accuracy }}%</div>
+      <div class="stars-earned">
+         <!-- Logic for stars display -->
+         ★★★★☆
+      </div>
+      <div class="actions">
+        <button (click)="backToGallery()" class="primary-btn">Continue</button>
+      </div>
+    </div>
+  </div>
+
+</div>

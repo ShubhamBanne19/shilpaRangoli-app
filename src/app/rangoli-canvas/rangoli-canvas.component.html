@@ -1,0 +1,54 @@
+<div class="canvas-container" #canvasContainer></div>
+
+<div class="overlay-title">
+  {{ gameName }}
+</div>
+
+<div class="control-panel" [class.collapsed]="!isUIVisible">
+  <div class="panel-header" (click)="toggleUI()">
+    <span>Controls</span>
+    <span class="toggle-icon">{{ isUIVisible ? '▼' : '▲' }}</span>
+  </div>
+  
+  <div class="panel-content" *ngIf="isUIVisible">
+    <!-- Sliders -->
+    <div class="control-group">
+      <label>Symmetry: {{ symmetryAxes }}</label>
+      <input type="range" min="2" max="16" step="2" [(ngModel)]="symmetryAxes">
+    </div>
+
+    <div class="control-group">
+      <label>Speed: {{ particleSpeed }}</label>
+      <input type="range" min="1" max="10" step="0.5" [(ngModel)]="particleSpeed">
+    </div>
+
+    <div class="control-group">
+      <label>Gravity: {{ gravityStrength }}</label>
+      <input type="range" min="0" max="2" step="0.1" [(ngModel)]="gravityStrength">
+    </div>
+
+    <div class="control-group">
+      <label>Particle Size: {{ particleSize }}</label> <!-- Logic uses slider value? In code logic used random(2,6). We should bias it or multiplier. -->
+      <!-- Added particleSize usage in TS logic if strict requirement. -->
+      <input type="range" min="1" max="8" step="0.5" [(ngModel)]="particleSize">
+    </div>
+
+    <!-- Actions -->
+    <div class="button-group">
+      <button (click)="resetCanvas()">Clear Canvas</button>
+      <button (click)="saveArtwork()">Save PNG</button>
+    </div>
+
+    <!-- Palette -->
+    <div class="palette-swatches">
+      <button class="swatch neon" (click)="setPalette('neon')" [class.active]="colorPalette === 'neon'"></button>
+      <button class="swatch pastel" (click)="setPalette('pastel')" [class.active]="colorPalette === 'pastel'"></button>
+      <button class="swatch fire" (click)="setPalette('fire')" [class.active]="colorPalette === 'fire'"></button>
+      <button class="swatch ice" (click)="setPalette('ice')" [class.active]="colorPalette === 'ice'"></button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Created by {{ creatorName }} · <a [href]="youtubeUrl" target="_blank">Subscribe on YouTube</a>
+</div>
